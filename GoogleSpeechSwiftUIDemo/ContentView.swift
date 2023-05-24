@@ -6,16 +6,42 @@
 //
 
 import SwiftUI
+import googleapis
+import AVFoundation
 
 struct ContentView: View {
+    @State var isRecording = false
+    @StateObject var speechManager = GoogleSpeechManager()
+    @State var transcripts: [String] = []
+    
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+            Button(action: run, label: { Text("Run") })
+            
+            ForEach($transcripts, id: \.self) { $tr in
+                TextEditor(text: $tr)
+            }
+            
+            TextEditor(text: $speechManager.transcript)
         }
         .padding()
+        .onChange(of: speechManager.isFinal) { isFinal in
+            if isFinal {
+                transcripts.append(speechManager.getPrevTranscript())
+            }
+        }
+    }
+    
+    func run() {
+        isRecording = !isRecording
+        
+        if isRecording {
+            speechManager.startRecording()
+            print("Recording ...")
+        } else {
+            speechManager.stopRecording()
+            print("Recording stopped.")
+        }
     }
 }
 

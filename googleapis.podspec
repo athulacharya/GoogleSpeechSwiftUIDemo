@@ -11,8 +11,9 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '7.1'
   s.osx.deployment_target = '10.9'
 
- # Run protoc with the Objective-C and gRPC plugins to generate protocol messages and gRPC clients.
-  s.dependency "!ProtoCompiler-gRPCPlugin", "~> 1.0"
+  # Run protoc with the Objective-C and gRPC plugins to generate protocol messages and gRPC clients.
+  s.dependency "!ProtoCompiler-gRPCPlugin", '1.48.0'
+  s.dependency 'Protobuf', '3.22.1'
 
   # Pods directory corresponding to this app's Podfile, relative to the location of this podspec.
   pods_root = 'Pods'

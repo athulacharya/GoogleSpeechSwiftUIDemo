@@ -12,7 +12,6 @@ Pod::Spec.new do |s|
   s.osx.deployment_target = '10.15'
 
   s.dependency 'gRPC-ProtoRPC'
-  s.dependency 'Protobuf', '3.22.1' # Do we even need this anymore?
 
   # Just include the files you generated
   s.source_files = "google/**/*.pbobjc.{h,m}"
@@ -21,7 +20,7 @@ Pod::Spec.new do |s|
   s.subspec 'Messages' do |ms|
     ms.requires_arc = false
     ms.source_files = 'google/**/*.pbobjc.{h,m}'
-    ms.dependency 'Protobuf', '3.22.1'
+    ms.dependency 'Protobuf'
   end
 
   s.subspec 'Services' do |ss|

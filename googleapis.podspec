@@ -1,59 +1,35 @@
 Pod::Spec.new do |s|
   s.name     = 'googleapis'
-  s.version  = '0.0.1'
+  s.version  = '0.0.2'
   s.license  = 'Apache 2.0'
-  s.authors  = { 'Google Inc.' => 'timburks@google.com'}
-  s.homepage = 'http://github.com/GoogleCloudPlatform/ios-docs-samples'
-  s.source   = { :git => 'https://github.com/GoogleCloudPlatform/ios-docs-samples.git',
-                 :tag => '0.0.1' }
+  s.authors  = { 'Google Inc.' => 'timburks@google.com', "Athul K. Acharya" => ""}
+  s.homepage = 'https://github.com/athulacharya/GoogleSpeechSwiftUIDemo/'
+  s.source   = { :git => 'https://github.com/athulacharya/GoogleSpeechSwiftUIDemo.git',
+                 :tag => '0.0.2' }
   s.summary  = 'Service definitions for Google Cloud Platform APIs'	  
 
-  s.ios.deployment_target = '7.1'
-  s.osx.deployment_target = '10.9'
+  s.ios.deployment_target = '16.4'
+  s.osx.deployment_target = '10.15'
 
-  # Run protoc with the Objective-C and gRPC plugins to generate protocol messages and gRPC clients.
-  s.dependency "!ProtoCompiler-gRPCPlugin", '1.48.0'
-  s.dependency 'Protobuf', '3.22.1'
+  s.dependency 'gRPC-ProtoRPC'
+  s.dependency 'Protobuf', '3.22.1' # Do we even need this anymore?
 
-  # Pods directory corresponding to this app's Podfile, relative to the location of this podspec.
-  pods_root = 'Pods'
+  # Just include the files you generated
+  s.source_files = "google/**/*.pbobjc.{h,m}"
+  s.header_mappings_dir = "."
 
-  # Path where Cocoapods downloads protoc and the gRPC plugin.
-  protoc_dir = "#{pods_root}/!ProtoCompiler"
-  protoc = "#{protoc_dir}/protoc"
-  plugin = "#{pods_root}/!ProtoCompiler-gRPCPlugin/grpc_objective_c_plugin"
-
-  # Run protoc with the Objective-C and gRPC plugins to generate protocol messages and gRPC clients.
-  # You can run this command manually if you later change your protos and need to regenerate.  
-  s.prepare_command = <<-CMD
-    #{protoc} \
-        --objc_opt=named_framework_to_proto_path_mappings_path=./protomap \
-        --plugin=protoc-gen-grpc=#{plugin} \
-        --objc_out=. \
-        --grpc_out=. \
-        -I . \
-        -I #{protoc_dir} \
-        google/*/*.proto google/*/*/*/*.proto
-  CMD
-
-  # The --objc_out plugin generates a pair of .pbobjc.h/.pbobjc.m files for each .proto file.
-  s.subspec "Messages" do |ms|
-    ms.source_files = "google/**/*.pbobjc.{h,m}"
-    ms.header_mappings_dir = "."
+  s.subspec 'Messages' do |ms|
     ms.requires_arc = false
-    ms.dependency "Protobuf"
+    ms.source_files = 'google/**/*.pbobjc.{h,m}'
+    ms.dependency 'Protobuf', '3.22.1'
   end
 
-  # The --objcgrpc_out plugin generates a pair of .pbrpc.h/.pbrpc.m files for each .proto file with
-  # a service defined.
-  s.subspec "Services" do |ss|
-    ss.source_files = "google/**/*.pbrpc.{h,m}"
-    ss.header_mappings_dir = "."
+  s.subspec 'Services' do |ss|
     ss.requires_arc = true
-    ss.dependency "gRPC-ProtoRPC"
-    ss.dependency "#{s.name}/Messages"
+    ss.source_files = 'google/**/*.pbrpc.{h,m}'
+    ss.dependency 'gRPC-ProtoRPC'
   end
-  
+
   s.pod_target_xcconfig = {
     'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) GPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1',
 	  'USER_HEADER_SEARCH_PATHS' => '$SRCROOT/..'

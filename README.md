@@ -17,3 +17,9 @@ This code builds in Xcode 14.3 with an iOS 16.4 target.
 - Run `pod install`
 - Open `GoogleSpeechSwiftUIDemo.xcworkspace`
 - Build & run
+
+## Troubleshooting
+If you need to regenerate the protobuf files:
+1. brew install protobuf
+2. brew install grpc
+3. find google -name "*.proto" | xargs -n 1 protoc --objc_out=. -I. --plugin=protoc-gen-grpc=`which grpc_objective_c_plugin` --grpc_out=.

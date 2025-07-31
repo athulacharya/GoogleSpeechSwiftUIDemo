@@ -19,6 +19,7 @@ post_install do |installer|
       if pod_ios_deployment_target <= app_ios_deployment_target
         configuration.build_settings.delete 'IPHONEOS_DEPLOYMENT_TARGET'
       end
+      # Ensure everything is built with the same language standard & c++ library
       configuration.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++17'
       configuration.build_settings['CLANG_CXX_LIBRARY'] = 'libc++'
     end
